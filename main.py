@@ -6,6 +6,8 @@ import sys
 from resources.scripts.ascii import ASCII
 from resources.scripts.filter import Filter
 from resources.scripts.colorize import Colorize
+from resources.scripts.convolution_kernels import ConvolutionKernels
+from resources.scripts.kernels import KERNELS
 
 
 class Menu:
@@ -13,7 +15,7 @@ class Menu:
         self.runned = True
 
     def filter_menu(self, path: str = "resources/images/Lenna.png") -> np.ndarray:
-        f_im = Filter(path)
+        f_im = Filter(path=path)
 
         with open("resources/filter.txt", "r") as f:
             menu_text = f.read()
@@ -47,13 +49,11 @@ class Menu:
         return filtered_arr
 
     def colorize_menu(self, path: str = "resources/images/Lenna.png") -> np.ndarray:
-        c_im = Colorize(path)
+        c_im = Colorize(path=path)
 
         with open("resources/colorize.txt", "r") as f:
             menu_text = f.read()
             option = input(menu_text).lower()
-
-        start_timer = time.time()
 
         match option:
             case "h":
@@ -70,13 +70,47 @@ class Menu:
             case _:
                 print("\n")
                 colorized_arr = self.colorize_menu()
-
+        start_timer = time.time()
         print(f"Image processing time: {round(time.time() - start_timer, 3)} s\n")
 
         return colorized_arr
 
+    def convolution_kernels_menu(self, path: str = "resources/images/Lenna.png") -> np.ndarray:
+        k_im = ConvolutionKernels(path=path)
+
+        with open("resources/convolution_kernels.txt", "r") as f:
+            menu_text = f.read()
+            option = input(menu_text).lower()
+
+        start_timer = time.time()
+
+        match option:
+            case "k":
+                kernels = {kernel[0] + kernel[-1]: kernel for kernel in KERNELS}
+                key = ""
+                while not key in kernels:
+                    key = input(
+                        f"Choose a kernel:\n{"\n".join([f"- {key}: {kernel.capitalize()}" for key, kernel in kernels.items()])}\nEnter an option: "
+                    ).lower()
+                kernels_arr = k_im.apply_kernel(kernel=kernels[key])
+
+            case "s":
+                modes = {"g": "gray", "ig": "invert_gray", "c": "color", "o": "overlay"}
+                key = input(
+                    f"Choose a mode:\n{"\n".join([f"- {key}: {" ".join(mode.split("_")).capitalize()}" for key, mode in modes.items()])}\nEnter an option: "
+                )
+                kernels_arr = k_im.sobel(mode=modes[key])
+
+            case _:
+                print("\n")
+                kernels_arr = self.convolution_kernels_menu()
+
+        print(f"Image processing time: {round(time.time() - start_timer, 3)} s\n")
+
+        return kernels_arr
+
     def menu(self, path: str = "resources/images/Lenna.png") -> None:
-        mode = input("\nUse filters (f) or colorize (c) an image or exit (e) : ")
+        mode = input("\nUse filters (f), colorize (c) or convolution kernels (k) for your image or exit (e) : ")
         print("\n")
         match mode:
             case "f":
@@ -92,13 +126,17 @@ class Menu:
                 self.runned = False
                 print("SEE YOU SPACE COWBOY...\n")
 
+            case _:
+                self.runned = False
+                print(f"There is no mode {mode}.")
+
         if self.runned:
             im = Image.fromarray(arr)
             im.show()
 
     def run(self) -> None:
         path = sys.argv[1] if len(sys.argv) > 1 else input("Path of your image : ")
-        if path == "default":
+        if path == "default" or path == "d":
             path = "resources/images/Lenna.png"
 
         print(ASCII(path=path).image_to_ascii())

@@ -91,7 +91,7 @@ class ConvolutionKernels(ImProcessing):
         else:
             raise ValueError("mode must be 'gray', 'invert_gray', 'color', or 'overlay'")
 
-    def apply_kernel(self, kernel):
+    def apply_kernel(self, kernel: str = "identity"):
         k = KERNELS[kernel]
         s = k.shape[0] // 2
 

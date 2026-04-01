@@ -17,8 +17,9 @@ class ASCII(ImProcessing):
         gray = self.im.convert("L")
         gray = ImageEnhance.Contrast(gray).enhance(contrast)
 
+        aspect_ratio = gray.height / gray.width
         self.width = width
-        height = int(width * 0.45)
+        height = int(aspect_ratio * width * 0.55)
         self.gray = gray.resize((self.width, height))
 
         self.chars = np.array(list(chars))
@@ -50,4 +51,4 @@ class ASCII(ImProcessing):
 
 
 if __name__ == "__main__":
-    print(ASCII().image_to_ascii(save=True))
+    print(ASCII(path="cowboy.png").image_to_ascii(save=True))
