@@ -2,8 +2,8 @@ from PIL import Image
 import time
 import numpy as np
 
-from filter import Filter
-from colorize import Colorize
+from resources.scripts.filter import Filter
+from resources.scripts.colorize import Colorize
 
 
 class Menu:

@@ -1,1 +1,3 @@
 # Traitement du signal image
+
+Le but du travail pratique est de manipuler les images à l'aide de filtre, de colorisation noyaux de convolution et de masque.

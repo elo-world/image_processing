@@ -1,7 +1,7 @@
 from PIL import Image
 import numpy as np
 
-from im_processing import ImProcessing
+from resources.scripts.im_processing import ImProcessing
 
 class Colorize(ImProcessing):
     def rgb_to_hsl(self, rgb: np.ndarray) -> np.ndarray:

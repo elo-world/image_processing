@@ -3,17 +3,18 @@ import numpy as np
 import math
 import time
 
-from im_processing import ImProcessing
+from resources.scripts.im_processing import ImProcessing
 
 
 class Filter(ImProcessing):
     def blur(self, s: int) -> np.ndarray:
 
+        padded = np.pad(self.src, ((s, s), (s, s), (0, 0)), mode="edge")
         b_im = self.src.copy()
 
-        for y in range(s, self.h - s):
-            for x in range(s, self.w - s):
-                s_box = self.src[y - s : y + s + 1, x - s : x + s + 1]
+        for y in range(self.h):
+            for x in range(self.w):
+                s_box = padded[y : y + 2 * s + 1, x : x + 2 * s + 1]
                 b_im[y, x] = np.mean(s_box, axis=(0, 1))
 
         return b_im.astype(np.uint8)
@@ -62,11 +63,12 @@ class Filter(ImProcessing):
 
     def median(self, s: int) -> np.ndarray:
 
+        padded = np.pad(self.src, ((s, s), (s, s), (0, 0)), mode="edge")
         b_im = self.src.copy()
 
-        for y in range(s, self.h - s):
-            for x in range(s, self.w - s):
-                s_box = self.src[y - s : y + s + 1, x - s : x + s + 1]
+        for y in range(self.h):
+            for x in range(self.w):
+                s_box = padded[y : y + 2 * s + 1, x : x + 2 * s + 1]
                 b_im[y, x] = np.median(s_box, axis=(0, 1))
 
         return b_im.astype(np.uint8)
@@ -93,6 +95,7 @@ class Filter(ImProcessing):
                 filtered_arr = None
 
         return filtered_arr
+
 
 if __name__ == "__main__":
     Filter().saltnpepper(0.1)
