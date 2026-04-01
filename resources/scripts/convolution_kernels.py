@@ -52,11 +52,11 @@ class ConvolutionKernels(ImProcessing):
 
             G = np.array(255) - G
 
-            return G.astype(np.uint8)
+            return G.astype(np.int8)
 
         elif mode == "color":
             padded = np.pad(self.src, ((s, s), (s, s), (0, 0)), mode="edge")
-            result = np.zeros_like(self.src, dtype=float)
+            s_im = np.zeros_like(self.src, dtype=float)
 
             for y in range(h):
                 for x in range(w):
@@ -65,9 +65,9 @@ class ConvolutionKernels(ImProcessing):
                     gx = np.sum(region * KERNELS["sobel_x"].reshape(3, 3, 1), axis=(0, 1))
                     gy = np.sum(region * KERNELS["sobel_y"].reshape(3, 3, 1), axis=(0, 1))
 
-                    result[y, x] = np.sqrt(gx**2 + gy**2)
+                    s_im[y, x] = np.sqrt(gx**2 + gy**2)
 
-            return np.clip(result, 0, 255).astype(np.uint8)
+            return np.clip(s_im, 0, 255).astype(np.uint8)
 
         elif mode == "overlay":
             gray = np.mean(self.src, axis=2)
