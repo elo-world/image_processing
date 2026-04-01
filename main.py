@@ -1,7 +1,9 @@
 from PIL import Image
 import time
 import numpy as np
+import sys
 
+from resources.scripts.ascii import ASCII
 from resources.scripts.filter import Filter
 from resources.scripts.colorize import Colorize
 
@@ -10,10 +12,10 @@ class Menu:
     def __init__(self):
         self.runned = True
 
-    def filter_menu(self) -> np.ndarray:
-        f_im = Filter("resources/images/Lenna.png")
+    def filter_menu(self, path: str = "resources/images/Lenna.png") -> np.ndarray:
+        f_im = Filter(path)
 
-        with open("filter.txt", "r") as f:
+        with open("resources/filter.txt", "r") as f:
             menu_text = f.read()
             option = input(menu_text).lower()
 
@@ -21,32 +23,33 @@ class Menu:
 
         match option:
             case "b":
-                b_level = int(input("Choisir le niveau de flou : "))
+                b_level = int(input("Select the blur level (ex: 3): "))
                 filtered_arr = f_im.blur(b_level)
 
             case "g":
-                g_level = float(input("Choisir l'écart type du bruit (ex: 10) : "))
+                g_level = float(input("Select the standard deviation of the noise (ex: 10): "))
                 filtered_arr = f_im.gaussnoise(g_level)
 
             case "snp":
-                density = float(input("Choisir la densité du bruit : "))
+                density = float(input("Select the noise density (ex: 0.1): "))
                 filtered_arr = f_im.saltnpepper(density)
 
             case "m":
-                m_level = int(input("Choisir le niveau : "))
+                m_level = int(input("Choose the level (ex: 3): "))
                 filtered_arr = f_im.median(m_level)
 
             case _:
+                print("\n")
                 filtered_arr = self.filter_menu()
 
         print(f"Traitement de l'image : {round(time.time() - start_timer, 3)} s\n")
 
         return filtered_arr
 
-    def colorize_menu(self) -> np.ndarray:
-        c_im = Colorize("resources/images/Lenna.png")
+    def colorize_menu(self, path: str = "resources/images/Lenna.png") -> np.ndarray:
+        c_im = Colorize(path)
 
-        with open("colorize.txt", "r") as f:
+        with open("resources/colorize.txt", "r") as f:
             menu_text = f.read()
             option = input(menu_text).lower()
 
@@ -54,44 +57,57 @@ class Menu:
 
         match option:
             case "h":
-                hue = float(input("Choisir la teinte : "))
+                hue = float(input("Choose a shade (ex: 70): "))
                 colorized_arr = c_im.colorize(hue)
 
             case "s":
-                s_level = float(input("Saturation multiplié par : "))
+                s_level = float(input("Saturation multiplied by (ex: 1.2): "))
                 colorized_arr = c_im.saturation(s_level)
 
-            case "mm":
+            case "mm":  # EasterEgg
                 colorized_arr = Colorize().marylyn()
 
             case _:
+                print("\n")
                 colorized_arr = self.colorize_menu()
 
-        print(f"Traitement de l'image : {round(time.time() - start_timer, 3)} s\n")
+        print(f"Image processing time: {round(time.time() - start_timer, 3)} s\n")
 
         return colorized_arr
 
-    def menu(self) -> None:
-        mode = input("Use filters (f) or colorize (c) an image or quit (q) : ")
+    def menu(self, path: str = "resources/images/Lenna.png") -> None:
+        mode = input("\nUse filters (f) or colorize (c) an image or exit (e) : ")
         print("\n")
         match mode:
             case "f":
-                arr = self.filter_menu()
+                arr = self.filter_menu(path)
 
             case "c":
-                arr = self.colorize_menu()
+                arr = self.colorize_menu(path)
 
-            case "q":
+            case "k":
+                arr = self.convolution_kernels_menu(path)
+
+            case "e":
                 self.runned = False
-                print("See you space cowboy !")
+                print("SEE YOU SPACE COWBOY...\n")
 
         if self.runned:
             im = Image.fromarray(arr)
             im.show()
 
     def run(self) -> None:
+        path = sys.argv[1] if len(sys.argv) > 1 else input("Path of your image : ")
+        if path == "default":
+            path = "resources/images/Lenna.png"
+
+        print(ASCII(path=path).image_to_ascii())
+
+        with open("resources/header.txt", "r") as f:
+            print(f.read())
+
         while self.runned:
-            self.menu()
+            self.menu(path)
 
 
 if __name__ == "__main__":

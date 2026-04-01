@@ -1,7 +1,11 @@
 from PIL import Image
 import numpy as np
 
-from resources.scripts.im_processing import ImProcessing
+if __name__ == "__main__":
+    from im_processing import ImProcessing
+else:
+    from resources.scripts.im_processing import ImProcessing
+
 
 class Colorize(ImProcessing):
     def rgb_to_hsl(self, rgb: np.ndarray) -> np.ndarray:
@@ -55,6 +59,8 @@ class Colorize(ImProcessing):
         return np.array([r, g, b])
 
     def marylyn(self) -> None:
+        self.__init__(path="resources/Images/mm.jpg")
+
         canva = Image.new("RGB", (self.im.width * 4, self.im.height), (255, 255, 255))
 
         colorized_mm = [self.im]
@@ -88,3 +94,7 @@ class Colorize(ImProcessing):
                 arr[y][x] = self.hsl_to_rgb(np.array([hue % 360, s, l]))
 
         return arr.astype(np.uint8)
+
+
+if __name__ == "__main__":
+    Image.fromarray(Colorize().marylyn()).show()

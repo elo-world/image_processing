@@ -1,23 +1,25 @@
-from PIL import Image
 import numpy as np
 import math
-import time
+from PIL import Image
 
-from resources.scripts.im_processing import ImProcessing
+if __name__ == "__main__":
+    from im_processing import ImProcessing
+else:
+    from resources.scripts.im_processing import ImProcessing
 
 
 class Filter(ImProcessing):
     def blur(self, s: int) -> np.ndarray:
 
         padded = np.pad(self.src, ((s, s), (s, s), (0, 0)), mode="edge")
-        b_im = self.src.copy()
+        b_im = np.zeros_like(self.src, dtype=np.uint8)
 
         for y in range(self.h):
             for x in range(self.w):
                 s_box = padded[y : y + 2 * s + 1, x : x + 2 * s + 1]
                 b_im[y, x] = np.mean(s_box, axis=(0, 1))
 
-        return b_im.astype(np.uint8)
+        return b_im
 
     def gaussnoise(self, sd: float) -> np.ndarray:
         noise = np.random.randn(*self.src.shape) * sd
@@ -64,14 +66,14 @@ class Filter(ImProcessing):
     def median(self, s: int) -> np.ndarray:
 
         padded = np.pad(self.src, ((s, s), (s, s), (0, 0)), mode="edge")
-        b_im = self.src.copy()
+        b_im = np.zeros_like(self.src, dtype=np.uint8)
 
         for y in range(self.h):
             for x in range(self.w):
                 s_box = padded[y : y + 2 * s + 1, x : x + 2 * s + 1]
                 b_im[y, x] = np.median(s_box, axis=(0, 1))
 
-        return b_im.astype(np.uint8)
+        return b_im
 
     def menu(self, option: str) -> np.ndarray:
         match option:
@@ -98,4 +100,4 @@ class Filter(ImProcessing):
 
 
 if __name__ == "__main__":
-    Filter().saltnpepper(0.1)
+    Image.fromarray(Filter().saltnpepper(0.1)).show()

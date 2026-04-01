@@ -1,5 +1,0 @@
-Changer la coloration de l'image :
-- h : Hue.
-- s : Saturation.
-
-Entrez une option : 

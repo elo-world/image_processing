@@ -1,11 +1,15 @@
-from resources.scripts.im_processing import ImProcessing
 from PIL import Image
 import numpy as np
 
-from resources.scripts.kernels import KERNELS
+if __name__ == "__main__":
+    from im_processing import ImProcessing
+    from kernels import KERNELS
+else:
+    from resources.scripts.im_processing import ImProcessing
+    from resources.scripts.kernels import KERNELS
 
 
-class Convolution(ImProcessing):
+class ConvolutionKernels(ImProcessing):
     def __init__(self, path):
         super().__init__(path)
 
@@ -103,5 +107,6 @@ class Convolution(ImProcessing):
         return b_im.astype(np.uint8)
 
 
-c = Convolution("resources/images/mm.jpg").sobel("overlay")
-Image.fromarray(c).show()
+if __name__ == "__main__":
+    c = ConvolutionKernels("resources/images/mm.jpg").sobel("overlay")
+    Image.fromarray(c).show()
