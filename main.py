@@ -1,5 +1,4 @@
 from PIL import Image
-import time
 import numpy as np
 import sys
 
@@ -21,8 +20,6 @@ class Menu:
             menu_text = f.read()
             option = input(menu_text).lower()
 
-        start_timer = time.time()
-
         match option:
             case "b":
                 b_level = int(input("Select the blur level (ex: 3): "))
@@ -43,8 +40,6 @@ class Menu:
             case _:
                 print("\n")
                 filtered_arr = self.filter_menu()
-
-        print(f"Traitement de l'image : {round(time.time() - start_timer, 3)} s\n")
 
         return filtered_arr
 
@@ -70,8 +65,6 @@ class Menu:
             case _:
                 print("\n")
                 colorized_arr = self.colorize_menu()
-        start_timer = time.time()
-        print(f"Image processing time: {round(time.time() - start_timer, 3)} s\n")
 
         return colorized_arr
 
@@ -81,8 +74,6 @@ class Menu:
         with open("resources/convolution_kernels.txt", "r") as f:
             menu_text = f.read()
             option = input(menu_text).lower()
-
-        start_timer = time.time()
 
         match option:
             case "k":
@@ -104,8 +95,6 @@ class Menu:
             case _:
                 print("\n")
                 kernels_arr = self.convolution_kernels_menu()
-
-        print(f"Image processing time: {round(time.time() - start_timer, 3)} s\n")
 
         return kernels_arr
 

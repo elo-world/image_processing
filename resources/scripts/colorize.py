@@ -3,10 +3,13 @@ import numpy as np
 
 if __name__ == "__main__":
     from im_processing import ImProcessing
+    from im_processing import auto_timer
 else:
     from resources.scripts.im_processing import ImProcessing
+    from resources.scripts.im_processing import auto_timer
 
 
+@auto_timer
 class Colorize(ImProcessing):
     def rgb_to_hsl(self, rgb: np.ndarray) -> np.ndarray:
         r, g, b = rgb / 255

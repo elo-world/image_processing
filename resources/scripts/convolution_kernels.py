@@ -3,12 +3,15 @@ import numpy as np
 
 if __name__ == "__main__":
     from im_processing import ImProcessing
+    from im_processing import auto_timer
     from kernels import KERNELS
 else:
     from resources.scripts.im_processing import ImProcessing
+    from resources.scripts.im_processing import auto_timer
     from resources.scripts.kernels import KERNELS
 
 
+@auto_timer
 class ConvolutionKernels(ImProcessing):
     def __init__(self, path):
         super().__init__(path)
