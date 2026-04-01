@@ -1,0 +1,7 @@
+Choisir un filtre :
+- b : Blur.
+- g : Gaussnoise.
+- snp : Salt and pepper.
+- m : Median.
+
+Entrez une option : 
