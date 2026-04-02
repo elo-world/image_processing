@@ -8,7 +8,7 @@ def timer(func):
         start = time.perf_counter()
         result = func(*args, **kwargs)
         end = time.perf_counter()
-        print(f"The {str(func.__name__).capitalize()} function took {end - start:.3f} seconds to execute.")
+        print(f"Image processing time ({str(func.__name__).capitalize()}): {end - start:.3f} s.")
         return result
 
     return wrapper
@@ -26,6 +26,6 @@ def auto_timer(cls):
 
 class ImProcessing:
     def __init__(self, path: str = "resources/images/Lenna.png") -> None:
-        self.im = Image.open(path)
+        self.im = Image.open(path).convert("RGB")
         self.src = np.array(self.im)
         self.h, self.w, _ = self.src.shape

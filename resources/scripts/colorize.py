@@ -3,13 +3,12 @@ import numpy as np
 
 if __name__ == "__main__":
     from im_processing import ImProcessing
-    from im_processing import auto_timer
+    from im_processing import timer
 else:
     from resources.scripts.im_processing import ImProcessing
-    from resources.scripts.im_processing import auto_timer
+    from resources.scripts.im_processing import timer
 
 
-@auto_timer
 class Colorize(ImProcessing):
     def rgb_to_hsl(self, rgb: np.ndarray) -> np.ndarray:
         r, g, b = rgb / 255
@@ -61,6 +60,7 @@ class Colorize(ImProcessing):
 
         return np.array([r, g, b])
 
+    @timer
     def marylyn(self) -> None:
         self.__init__(path="resources/Images/mm.jpg")
 
@@ -78,6 +78,7 @@ class Colorize(ImProcessing):
 
         return np.array(canva)
 
+    @timer
     def saturation(self, m: float) -> np.ndarray:
         arr = self.src.copy()
 
@@ -88,6 +89,7 @@ class Colorize(ImProcessing):
 
         return arr.astype(np.uint8)
 
+    @timer
     def colorize(self, hue: float) -> np.ndarray:
         arr = self.src.copy()
 
