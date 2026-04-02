@@ -6,6 +6,7 @@
 
 Select a filter:
 - b: Blur.
+- sb: Smart Blur.
 - g: Gaussian noise.
 - snp: Salt and pepper.
 - m: Median.

@@ -1,12 +1,7 @@
 from PIL import Image
 import numpy as np
 
-if __name__ == "__main__":
-    from im_processing import ImProcessing
-    from im_processing import timer
-else:
-    from resources.scripts.im_processing import ImProcessing
-    from resources.scripts.im_processing import timer
+from resources.scripts.im_processing import ImProcessing, timer
 
 
 class Colorize(ImProcessing):
@@ -32,7 +27,7 @@ class Colorize(ImProcessing):
             else:
                 h = 60 * (((r - g) / delta) + 4)
 
-        return np.array([h, s, l])
+        return np.array([h, s, l]).astype(dtype=float)
 
     def hsl_to_rgb(self, hsl: np.ndarray) -> np.ndarray:
         h, s, l = hsl
@@ -58,7 +53,7 @@ class Colorize(ImProcessing):
         g = (g + m) * 255
         b = (b + m) * 255
 
-        return np.array([r, g, b])
+        return np.array([r, g, b]).astype(dtype=float)
 
     @timer
     def marylyn(self) -> None:
@@ -87,7 +82,7 @@ class Colorize(ImProcessing):
                 h, s, l = self.rgb_to_hsl(self.src[y][x])
                 arr[y][x] = self.hsl_to_rgb(np.array([h, s * m, l]))
 
-        return arr.astype(np.uint8)
+        return np.clip(arr, 0, 255).astype(np.uint8)
 
     @timer
     def colorize(self, hue: float) -> np.ndarray:
@@ -98,8 +93,8 @@ class Colorize(ImProcessing):
                 _, s, l = self.rgb_to_hsl(self.src[y][x])
                 arr[y][x] = self.hsl_to_rgb(np.array([hue % 360, s, l]))
 
-        return arr.astype(np.uint8)
+        return np.clip(arr, 0, 255).astype(np.uint8)
 
 
 if __name__ == "__main__":
-    Image.fromarray(Colorize().marylyn()).show()
+    Image.fromarray(Colorize().saturation(m=3)).show()

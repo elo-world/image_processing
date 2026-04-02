@@ -2,12 +2,8 @@ import numpy as np
 import math
 from PIL import Image
 
-if __name__ == "__main__":
-    from im_processing import ImProcessing
-    from im_processing import auto_timer
-else:
-    from resources.scripts.im_processing import ImProcessing
-    from resources.scripts.im_processing import auto_timer
+
+from resources.scripts.im_processing import ImProcessing, auto_timer
 
 
 @auto_timer
@@ -15,14 +11,37 @@ class Filter(ImProcessing):
     def blur(self, s: int) -> np.ndarray:
 
         padded = np.pad(self.src, ((s, s), (s, s), (0, 0)), mode="edge")
-        b_im = np.zeros_like(self.src, dtype=np.uint8)
+        b_im = np.zeros_like(self.src, dtype=np.float32)
 
         for y in range(self.h):
             for x in range(self.w):
                 s_box = padded[y : y + 2 * s + 1, x : x + 2 * s + 1]
                 b_im[y, x] = np.mean(s_box, axis=(0, 1))
 
-        return b_im
+        return np.clip(b_im, 0, 255).astype(dtype=np.uint8)
+
+    def hblur(self, src: np.ndarray, s: int) -> np.ndarray:
+        padded = np.pad(src, ((0, 0), (s, s), (0, 0)), mode="edge")
+        hb_im = np.zeros_like(src, dtype=np.float32)
+
+        for i in range(2 * s + 1):
+            hb_im += padded[:, i : i + src.shape[1], :]
+
+        hb_im /= 2 * s + 1
+        return np.clip(hb_im, 0, 255).astype(np.uint8)
+
+    def vblur(self, src: np.ndarray, s: int) -> np.ndarray:
+        padded = np.pad(src, ((s, s), (0, 0), (0, 0)), mode="edge")
+        vb_im = np.zeros_like(src, dtype=np.float32)
+
+        for i in range(2 * s + 1):
+            vb_im += padded[i : i + src.shape[0], :, :]
+
+        vb_im /= 2 * s + 1
+        return np.clip(vb_im, 0, 255).astype(np.uint8)
+
+    def smart_blur(self, s: int) -> np.ndarray:
+        return self.hblur(self.vblur(self.src, s), s)
 
     def gaussnoise(self, sd: float) -> np.ndarray:
         noise = np.random.randn(*self.src.shape) * sd
@@ -64,19 +83,19 @@ class Filter(ImProcessing):
         for i in range(0, n):
             dst[y[i], x[i]] = [255] * 3
 
-        return dst
+        return np.clip(dst, 0, 255).astype(dtype=np.uint8)
 
     def median(self, s: int) -> np.ndarray:
 
         padded = np.pad(self.src, ((s, s), (s, s), (0, 0)), mode="edge")
-        b_im = np.zeros_like(self.src, dtype=np.uint8)
+        b_im = np.zeros_like(self.src, dtype=np.float32)
 
         for y in range(self.h):
             for x in range(self.w):
                 s_box = padded[y : y + 2 * s + 1, x : x + 2 * s + 1]
                 b_im[y, x] = np.median(s_box, axis=(0, 1))
 
-        return b_im
+        return np.clip(b_im, 0, 255).astype(dtype=np.uint8)
 
     def menu(self, option: str) -> np.ndarray:
         match option:
@@ -103,4 +122,5 @@ class Filter(ImProcessing):
 
 
 if __name__ == "__main__":
-    Image.fromarray(Filter().saltnpepper(0.1)).show()
+    Image.fromarray(Filter().blur(40))
+    Image.fromarray(Filter().smart_blur(40))

@@ -25,6 +25,10 @@ class Menu:
                 b_level = int(input("Select the blur level (ex: 3): "))
                 filtered_arr = f_im.blur(b_level)
 
+            case "sb":
+                b_level = int(input("Select the blur level (ex: 3): "))
+                filtered_arr = f_im.smart_blur(b_level)
+
             case "g":
                 g_level = float(input("Select the standard deviation of the noise (ex: 10): "))
                 filtered_arr = f_im.gaussnoise(g_level)

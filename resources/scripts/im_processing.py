@@ -25,7 +25,14 @@ def auto_timer(cls):
 
 
 class ImProcessing:
+    path: str
+    im: Image.Image
+    src: np.ndarray
+    h: int
+    w: int
+
     def __init__(self, path: str = "resources/images/Lenna.png") -> None:
+        self.path = path
         self.im = Image.open(path).convert("RGB")
-        self.src = np.array(self.im)
+        self.src = np.array(self.im).astype(dtype=np.float32)
         self.h, self.w, _ = self.src.shape

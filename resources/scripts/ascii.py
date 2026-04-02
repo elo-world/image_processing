@@ -1,10 +1,7 @@
 import numpy as np
 from PIL import ImageEnhance
 
-if __name__ == "__main__":
-    from im_processing import ImProcessing
-else:
-    from resources.scripts.im_processing import ImProcessing
+from resources.scripts.im_processing import ImProcessing
 
 
 class ASCII(ImProcessing):

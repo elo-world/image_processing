@@ -1,14 +1,8 @@
 from PIL import Image
 import numpy as np
 
-if __name__ == "__main__":
-    from im_processing import ImProcessing
-    from im_processing import auto_timer
-    from kernels import KERNELS
-else:
-    from resources.scripts.im_processing import ImProcessing
-    from resources.scripts.im_processing import auto_timer
-    from resources.scripts.kernels import KERNELS
+from resources.scripts.im_processing import ImProcessing, auto_timer
+from resources.scripts.kernels import KERNELS
 
 
 @auto_timer
@@ -38,7 +32,7 @@ class ConvolutionKernels(ImProcessing):
 
             G = G / G.max() * 255
 
-            return G.astype(np.uint8)
+            return np.clip(G, 0, 255).astype(np.uint8)
 
         elif mode == "invert_gray":
             gray = np.mean(self.src, axis=2)
@@ -57,7 +51,7 @@ class ConvolutionKernels(ImProcessing):
 
             G = np.array(255) - G
 
-            return G.astype(np.int8)
+            return np.clip(G, 0, 255).astype(np.int8)
 
         elif mode == "color":
             padded = np.pad(self.src, ((s, s), (s, s), (0, 0)), mode="edge")
@@ -109,7 +103,7 @@ class ConvolutionKernels(ImProcessing):
                 value = np.sum(s_box * k.reshape(*k.shape, 1), axis=(0, 1))
                 b_im[y, x] = np.clip(value, 0, 255)
 
-        return b_im.astype(np.uint8)
+        return np.clip(b_im, 0, 255).astype(np.uint8)
 
 
 if __name__ == "__main__":
