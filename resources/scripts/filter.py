@@ -97,28 +97,12 @@ class Filter(ImProcessing):
 
         return np.clip(b_im, 0, 255).astype(dtype=np.uint8)
 
-    def menu(self, option: str) -> np.ndarray:
-        match option:
-            case "b":
-                b_level = int(input("Choisir le niveau de flou : "))
-                filtered_arr = self.blur(b_level)
+    def unsharp_masking(self, radius: int = 2, amount: float = 1.5) -> np.ndarray:
+        blurred = self.smart_blur(radius)
 
-            case "g":
-                g_level = float(input("Choisir l'écart type du bruit (ex: 10) : "))
-                filtered_arr = self.gaussnoise(g_level)
+        sharpened = self.src + amount * (self.src - blurred)
 
-            case "snp":
-                density = float(input("Choisir la densité du bruit : "))
-                filtered_arr = self.saltnpepper(density)
-
-            case "m":
-                m_level = int(input("Choisir le niveau : "))
-                filtered_arr = self.median(m_level)
-
-            case _:
-                filtered_arr = None
-
-        return filtered_arr
+        return np.clip(sharpened, 0, 255).astype(np.uint8)
 
 
 if __name__ == "__main__":

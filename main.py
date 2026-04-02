@@ -41,6 +41,10 @@ class Menu:
                 m_level = int(input("Choose the level (ex: 3): "))
                 filtered_arr = f_im.median(m_level)
 
+            case "um":
+                radius, amount = input("Choose the radius and the amount (ex: 2, 1.5): ").replace(" ", "").split(",")
+                filtered_arr = f_im.unsharp_masking(radius=int(radius), amount=float(amount))
+
             case _:
                 print("\n")
                 filtered_arr = self.filter_menu()

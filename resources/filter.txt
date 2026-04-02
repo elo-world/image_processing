@@ -10,5 +10,6 @@ Select a filter:
 - g: Gaussian noise.
 - snp: Salt and pepper.
 - m: Median.
+- um: Unsharp Masking.
 
 Enter an option: 
