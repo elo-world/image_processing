@@ -13,10 +13,12 @@ else:
 
 @auto_timer
 class ConvolutionKernels(ImProcessing):
-    def __init__(self, path):
+    def __init__(self, path: str = "resources/images/Lenna.png") -> None:
         super().__init__(path)
 
-    def sobel(self, mode="gray"):
+        self.modes = ["gray", "invert_gray", "color", "overlay"]
+
+    def sobel(self, mode: str = "gray") -> np.ndarray:
 
         s = 1
         h, w, _ = self.src.shape

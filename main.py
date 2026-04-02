@@ -86,10 +86,10 @@ class Menu:
                 kernels_arr = k_im.apply_kernel(kernel=kernels[key])
 
             case "s":
-                modes = {"g": "gray", "ig": "invert_gray", "c": "color", "o": "overlay"}
+                modes = {mode[0] + mode[-1]: mode for mode in k_im.modes}
                 key = input(
                     f"Choose a mode:\n{"\n".join([f"- {key}: {" ".join(mode.split("_")).capitalize()}" for key, mode in modes.items()])}\nEnter an option: "
-                )
+                ).lower()
                 kernels_arr = k_im.sobel(mode=modes[key])
 
             case _:
@@ -99,7 +99,7 @@ class Menu:
         return kernels_arr
 
     def menu(self, path: str = "resources/images/Lenna.png") -> None:
-        mode = input("\nUse filters (f), colorize (c) or convolution kernels (k) for your image or exit (e) : ")
+        mode = input("\nUse filters (f), colorize (c) or convolution kernels (k) for your image or exit (e): ")
         print("\n")
         match mode:
             case "f":

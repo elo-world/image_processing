@@ -8,7 +8,6 @@ else:
 
 
 class ASCII(ImProcessing):
-
     def __init__(
         self, width: int = 70, chars: str = "  ..*%@", contrast: float = 1.5, path: str = "resources/images/Lenna.png"
     ) -> None:
