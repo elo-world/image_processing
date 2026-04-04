@@ -11,7 +11,7 @@ class ConvolutionKernels(ImProcessing):
         super().__init__(path)
 
         self.modes = ["gray", "invert_gray", "color", "overlay"]
-
+    
     def sobel(self, mode: str = "gray") -> np.ndarray:
 
         s = 1
