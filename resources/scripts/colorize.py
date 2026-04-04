@@ -1,9 +1,9 @@
 from PIL import Image
 import numpy as np
 
-from resources.scripts.im_processing import ImProcessing, timer
+from resources.scripts.im_processing import ImProcessing, auto_timer
 
-
+@auto_timer
 class Colorize(ImProcessing):
     def rgb_to_hsl(self, rgb: np.ndarray) -> np.ndarray:
         r, g, b = rgb / 255
@@ -55,7 +55,6 @@ class Colorize(ImProcessing):
 
         return np.array([r, g, b]).astype(dtype=float)
 
-    @timer
     def marylyn(self) -> None:
         self.__init__(path="resources/Images/mm.jpg")
 
@@ -73,7 +72,6 @@ class Colorize(ImProcessing):
 
         return np.array(canva)
 
-    @timer
     def saturation(self, m: float) -> np.ndarray:
         arr = self.src.copy()
 
@@ -84,7 +82,6 @@ class Colorize(ImProcessing):
 
         return np.clip(arr, 0, 255).astype(np.uint8)
 
-    @timer
     def colorize(self, hue: float) -> np.ndarray:
         arr = self.src.copy()
 

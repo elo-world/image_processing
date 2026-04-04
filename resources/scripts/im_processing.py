@@ -15,7 +15,8 @@ def timer(func):
 
 
 def auto_timer(cls):
-    for name in dir(cls):
+    exception_func = ["rgb_to_hsl", "hsl_to_rgb"]
+    for name in list(set(dir(cls)) - set(exception_func)):
         if name.startswith("__"):
             continue
         attr = getattr(cls, name)
